@@ -1,38 +1,268 @@
-body {
-    background-color: #f8f9fa;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* ===== CSS Variables ===== */
+:root {
+    --primary-color: #007bff;
+    --primary-hover: #0056b3;
+    --success-color: #28a745;
+    --success-hover: #218838;
+    --danger-color: #dc3545;
+    --danger-hover: #b52a37;
+    --background-color: #f8f9fb;
+    --card-background: #fff;
+    --text-color: #333;
+    --text-muted: #555;
+    --text-light: #777;
+    --border-color: #ccc;
+    --shadow: rgba(0,0,0,0.08);
+    --shadow-hover: rgba(0,0,0,0.12);
+    --transition: 0.3s ease;
+    --border-radius: 8px;
+    --border-radius-large: 12px;
+    --spacing-small: 0.5rem;
+    --spacing-medium: 1rem;
+    --spacing-large: 1.5rem;
+    --spacing-xl: 2rem;
 }
 
-.navbar-brand {
-    font-weight: bold;
+/* ===== Reset básico ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+body {
+    background: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    padding: var(--spacing-xl);
+}
+
+/* ===== Containers principais ===== */
+.container {
+    max-width: 900px;
+    width: 100%;
+}
+
+h1, h2, h3 {
+    color: #222;
+    margin-bottom: var(--spacing-small);
+}
+
+p {
+    color: var(--text-muted);
+}
+
+/* ===== Links e navegação ===== */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover {
+    color: var(--primary-color);
+}
+
+a:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* ===== Cards ===== */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-medium);
+    margin: var(--spacing-xl) 0;
 }
 
 .card {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    background: var(--card-background);
+    border-radius: var(--border-radius-large);
+    padding: var(--spacing-large);
+    text-align: center;
+    box-shadow: 0 4px 8px var(--shadow);
+    transition: transform var(--transition), box-shadow var(--transition);
+    cursor: pointer;
 }
 
 .card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 14px var(--shadow-hover);
 }
 
-.jumbotron {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.icon {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-small);
+}
+
+/* ===== Botões ===== */
+button {
+    background: var(--primary-color);
+    border: none;
     color: white;
-    border-radius: 15px;
+    padding: 0.7rem 1.2rem;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 0.3rem;
+    transition: background var(--transition);
 }
 
-.sensor-value {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #2c3e50;
+button:hover {
+    background: var(--primary-hover);
 }
 
-.sensor-label {
+button:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Botões específicos do LED */
+#ligar_botao {
+    background: var(--success-color);
+}
+#ligar_botao:hover {
+    background: var(--success-hover);
+}
+#desligar_botao {
+    background: var(--danger-color);
+}
+#desligar_botao:hover {
+    background: var(--danger-hover);
+}
+
+/* Grupo de botões LED */
+.botoes-led {
+    display: flex;
+    gap: var(--spacing-medium);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ===== Formulário de Login ===== */
+form {
+    background: var(--card-background);
+    padding: var(--spacing-xl);
+    border-radius: var(--border-radius-large);
+    width: 300px;
+    box-shadow: 0 4px 10px var(--shadow);
+    text-align: center;
+    margin: auto;
+}
+
+form h1 {
+    margin-bottom: var(--spacing-medium);
+}
+
+form input {
+    width: 100%;
+    padding: 0.7rem;
+    margin: 0.6rem 0;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    outline: none;
+    transition: border var(--transition);
+}
+
+form input:focus {
+    border-color: var(--primary-color);
+}
+
+/* ===== Navegação ===== */
+.menu {
+    margin: var(--spacing-medium) 0 var(--spacing-xl) 0;
+    display: flex;
+    gap: var(--spacing-medium);
+    flex-wrap: wrap;
+}
+
+.menu a {
+    background: var(--card-background);
+    padding: 0.6rem 1rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 6px var(--shadow);
+    transition: background var(--transition), color var(--transition);
+}
+
+.menu a:hover {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+/* ===== Status do LED ===== */
+#status-led {
     font-size: 1.2rem;
-    color: #7f8c8d;
+    margin: var(--spacing-medium) 0;
+    font-weight: bold;
 }
 
-.container {
-    max-width: 1200px;
+/* ===== Sensor Cards ===== */
+.sensor-card {
+    background: var(--card-background);
+    padding: var(--spacing-medium);
+    border-radius: var(--border-radius-large);
+    box-shadow: 0 3px 8px var(--shadow);
+    margin-bottom: var(--spacing-medium);
+}
+
+#valor_temperatura,
+#valor_umidade {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: var(--spacing-small);
+    color: var(--primary-color);
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* ===== Animações ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== Footer ===== */
+.footer {
+    margin-top: var(--spacing-xl);
+    font-size: 0.9rem;
+    color: var(--text-light);
+    text-align: center;
+}
+
+/* ===== Responsividade ===== */
+@media (max-width: 768px) {
+    body {
+        padding: var(--spacing-medium);
+    }
+
+    .container {
+        max-width: 100%;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-medium);
+    }
+
+    .menu {
+        justify-content: center;
+    }
+
+    form {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .botoes-led {
+        flex-direction: column;
+        align-items: center;
+    }
 }

@@ -1,85 +1,97 @@
-// Formata números para exibição
-function formatarNumero(valor, casasDecimais = 1) {
+// formata números para exibição
+function formata_numero(valor, casasDecimais = 1) {
     return parseFloat(valor).toFixed(casasDecimais);
 }
 
-// Atualiza status do LED
-function atualizarStatusLED(estado) {
-    const statusElement = document.getElementById('status-led');
-    if (!statusElement) return;
+// Atualiza o status do LED na interface
+function atualiza_led(estado) {
+    const modo_led = document.getElementById('status-led');
+    if (!modo_led) return;
     if (estado === 1) {
-        statusElement.innerHTML = '🟢 LED LIGADO';
-        statusElement.className = 'led-status led-on';
+        modo_led.innerHTML = '🟢 LED LIGADO';
     } else {
-        statusElement.innerHTML = '🔴 LED DESLIGADO';
-        statusElement.className = 'led-status led-off';
+        modo_led.innerHTML = '🔴 LED DESLIGADO';
     }
 }
 
-// Verifica conexão com internet
-function verificarConexao() {
-    if (!navigator.onLine) {
-        alert('⚠️ Sem conexão com a internet');
-        return false;
-    }
-    return true;
+// atualiza os valores dos sensores
+function atualiza_dados() {
+
+    // envia comando para solicitar atualização ao ESP
+    fetch('/publish_message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic: '/aula_flask/atualizar', message: '1' })
+    }).then(() => {
+        // após mandar solicitar, pega os dados do Flask
+        fetch('/get_sensor_data')
+            .then(response => response.json())
+            .then(data => {
+                const valor_temperatura = document.getElementById('valor_temperatura');
+                const valor_umidade = document.getElementById('valor_umidade');
+                const atualizar = document.getElementById('ultima_atualizacao');
+
+                if (valor_temperatura) valor_temperatura.textContent = formata_numero(data.temperatura);
+                if (valor_umidade) valor_umidade.textContent = formata_numero(data.umidade);
+
+                if (atualizar) {
+                    const data_atualizacao = new Date(data.last_update * 1000);
+                    atualizar.textContent = data_atualizacao.toLocaleTimeString();
+                }
+            })
+            .catch(err => console.log('Erro ao obter dados dos sensores:', err));
+    });
 }
 
-// Log de eventos no console
-function logEvento(mensagem, tipo = 'info') {
-    const cores = {
-        'info': '#3498db',
-        'success': '#2ecc71', 
-        'error': '#e74c3c',
-        'warning': '#f39c12'
-    };
-    console.log(`%c${mensagem}`, `color: ${cores[tipo]}; font-weight: bold;`);
-}
 
-// Atualiza os valores dos sensores (Tempo Real)
-function atualizarDados() {
-    if (!verificarConexao()) return;
+// publica comando LED
+function publicar_led(estado) {
+    if (!verifica_conexao()) return;
 
-    fetch('/get_sensor_data')
-        .then(res => res.json())
-        .then(data => {
-            if (document.getElementById('temperature-value'))
-                document.getElementById('temperature-value').textContent = formatarNumero(data.temperature);
-            if (document.getElementById('humidity-value'))
-                document.getElementById('humidity-value').textContent = formatarNumero(data.humidity);
-            
-            const dataAtualizacao = new Date(data.last_update * 1000);
-            if (document.getElementById('last-update'))
-                document.getElementById('last-update').textContent = dataAtualizacao.toLocaleTimeString();
+    const ligar_botao = document.getElementById('ligar_botao');
+    const desligar_botao = document.getElementById('desligar_botao');
 
-            logEvento(`Dados atualizados: ${data.temperature}°C, ${data.humidity}%`, 'success');
-        })
-        .catch(err => {
-            logEvento('Erro ao atualizar dados: ' + err, 'error');
-        });
-}
-
-// Publica comando LED
-function publicarComandoLED(estado) {
-    if (!verificarConexao()) return;
-    const btnOn = document.getElementById('btn-on');
-    const btnOff = document.getElementById('btn-off');
-    if (btnOn) btnOn.disabled = true;
-    if (btnOff) btnOff.disabled = true;
+    // Desabilitar botões durante a requisição
+    if (ligar_botao) ligar_botao.disabled = true;
+    if (desligar_botao) desligar_botao.disabled = true;
 
     fetch('/publish_message', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({topic: '/aula_flask/led', message: estado.toString()})
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic: '/aula_flask/led', message: estado.toString() })
     })
-    .then(res => res.json())
-    .then(data => {
-        atualizarStatusLED(data.led_status);
-        logEvento(`Comando enviado: LED ${estado===1?'LIGADO':'DESLIGADO'}`, 'success');
-    })
-    .catch(err => logEvento('Erro ao publicar: ' + err, 'error'))
-    .finally(() => {
-        if (btnOn) btnOn.disabled = false;
-        if (btnOff) btnOff.disabled = false;
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro na resposta da rede');
+            }
+            return response.json();
+        })
+        .then(data => {
+            atualiza_led(data.led_status);
+        })
+        .catch(err => {
+            logEvento('Erro ao publicar: ' + err.message, 'error');
+        })
+        .finally(() => {
+            // Reabilitar botões
+            if (ligar_botao) ligar_botao.disabled = false;
+            if (desligar_botao) desligar_botao.disabled = false;
+        });
 }
+
+// inicialização baseada na página
+document.addEventListener('DOMContentLoaded', function () {
+    // verificar se estamos na página de controle do LED
+    if (document.getElementById('ligar_botao') && document.getElementById('desligar_botao')) {
+        logEvento('Página de controle do LED carregada', 'info');
+    }
+
+    // verificar se estamos na página de tempo real
+    if (document.getElementById('valor_temperatura') && document.getElementById('valor_umidade')) {
+        logEvento('Página de tempo real carregada', 'info');
+        atualiza_dados();
+
+        // atualizar dados a cada 3 segundos
+        setInterval(atualiza_dados, 3000);
+    }
+});

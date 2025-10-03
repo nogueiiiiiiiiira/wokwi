@@ -1,45 +1,43 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tempo Real - Sistema IoT</title>
-<link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tempo Real - Sistema IoT</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/script.js"></script>
 </head>
+
 <body>
-<div class="container">
-    <h1>📊 Monitoramento em Tempo Real</h1>
-    <div class="nav">
-        <a href="/home">🏠 Home</a>
-        <a href="/publish">🔧 Controle LED</a>
+    <div class="container">
+        <h1>Monitoramento em Tempo Real</h1>
+
+        <nav class="menu">
+            <a href="/home">🏠 Home</a>
+            <a href="/publish">🔧 Controle LED</a>
+        </nav>
+
+        <button onclick="atualiza_dados()">Atualizar Dados</button>
+        <br>
+        <br>
+
+        <div class="sensor-card">
+            <h2>Temperatura</h2>
+            <div id="valor_temperatura">{{ values.temperatura }}</div>
+            <div>°C</div>
+        </div>
+
+        <div class="sensor-card">
+            <h2>Umidade</h2>
+            <div id="valor_umidade">{{ values.umidade }}</div>
+            <div>%</div>
+        </div>
+
+        <div class="footer">
+            Última atualização: <span id="ultima_atualizacao">Agora</span>
+        </div>
     </div>
-
-    <button class="btn-refresh" onclick="atualizarDados()">🔄 Atualizar Dados</button>
-
-    <div class="sensor-card temperature">
-        <h2>🌡️ Temperatura</h2>
-        <div class="value" id="temperature-value">{{ values.temperature }}</div>
-        <div class="unit">°C</div>
-    </div>
-
-    <div class="sensor-card humidity">
-        <h2>💧 Umidade</h2>
-        <div class="value" id="humidity-value">{{ values.humidity }}</div>
-        <div class="unit">%</div>
-    </div>
-
-    <div style="margin-top: 20px; font-size: 0.9em; color: #666;">
-        Última atualização: <span id="last-update">Agora</span>
-    </div>
-</div>
-
-<script src="/static/script.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    logEvento('Página de tempo real carregada', 'info');
-    atualizarDados(); // Primeira atualização
-    setInterval(atualizarDados, 5000); // Atualização automática
-});
-</script>
 </body>
+
 </html>

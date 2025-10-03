@@ -1,36 +1,40 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Controle LED - Sistema IoT</title>
-<link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle LED - Sistema IoT</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/script.js"></script>
 </head>
+
 <body>
-<div class="container">
-    <h1>🔧 Controle do LED</h1>
-    <div class="nav">
-        <a href="/home">🏠 Home</a>
-        <a href="/tempo_real">📊 Tempo Real</a>
+    <div class="container">
+        <h1>Controle do LED</h1>
+
+        <nav class="menu">
+            <a href="/home">🏠 Home</a>
+            <a href="/tempo_real">📊 Tempo Real</a>
+        </nav>
+
+        <div id="status-led">
+            {% if led_status == 1 %}
+            🟢 LED LIGADO
+            {% else %}
+            🔴 LED DESLIGADO
+            {% endif %}
+        </div>
+
+        <div class="botoes-led">
+            <button onclick="publicar_led(1)" id="ligar_botao">LIGAR LED</button>
+            <button onclick="publicar_led(0)" id="desligar_botao">DESLIGAR LED</button>
+        </div>
+
+        <div class="footer">
+            Tópico: <code>/aula_flask/led</code>
+        </div>
     </div>
-
-    <div id="status-led" class="led-status {% if led_status == 1 %}led-on{% else %}led-off{% endif %}">
-        {% if led_status == 1 %}🟢 LED LIGADO{% else %}🔴 LED DESLIGADO{% endif %}
-    </div>
-
-    <button class="btn-control btn-on" onclick="publicarComandoLED(1)" id="btn-on">🟢 LIGAR LED</button>
-    <button class="btn-control btn-off" onclick="publicarComandoLED(0)" id="btn-off">🔴 DESLIGAR LED</button>
-
-    <div style="margin-top: 20px; font-size: 0.9em; color: #666;">
-        Tópico: <code>/aula_flask/led</code>
-    </div>
-</div>
-
-<script src="/static/script.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    logEvento('Página de controle do LED carregada', 'info');
-});
-</script>
 </body>
+
 </html>
