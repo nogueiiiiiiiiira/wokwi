@@ -1,8 +1,10 @@
 from flask import Flask, json, render_template, request, redirect, url_for, jsonify
 from flask_mqtt import Mqtt
 import time
+from login import login
 
 app = Flask(__name__)
+app.register_blueprint(login, url_prefix = '/')
 
 # configurações do MQTT
 app.config['MQTT_BROKER_URL'] = 'mqtt-dashboard.com'
@@ -24,8 +26,8 @@ topic_subscribe = "/aula_flask/#"
 
 # rotas flask
 @app.route('/')
-def index():
-    return redirect(url_for('home'))
+def login():
+    return render_template("login.html")
 
 @app.route('/home')
 def home():
