@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, json, render_template, request, redirect, url_for, jsonify
 from flask_mqtt import Mqtt
 import time
 
@@ -86,23 +86,20 @@ def handle_disconnect(client, userdata, rc):
 @mqtt_client.on_message()
 def handle_mqtt_message(client, userdata, message):
     global temperatura, umidade, led_status, last_update
-    
-    payload = message.payload.decode()
-    topic = message.topic
-    
     try:
-        if topic == "/aula_flask/temperatura":
-            temperatura = float(payload)
-        elif topic == "/aula_flask/umidade":
-            umidade = float(payload)
-        elif topic == "/aula_flask/led":
-            led_status = int(payload)
-        
+        payload = message.payload.decode()
+        data = json.loads(payload)
+        if data.get("sensor") == "/aula_flask/temperatura":
+            temperatura = data["valor"]
+        elif data.get("sensor") == "/aula_flask/umidade":
+            umidade = data["valor"]
         last_update = time.time()
-        print(f"[MQTT] {topic} = {payload}")
-        
-    except Exception as e:
-        print(f"[MQTT] Erro ao processar mensagem: {payload} | {e}")
+    except:
+        # fallback para mensagem simples
+        if message.topic == "/aula_flask/temperatura":
+            temperatura = float(payload)
+        elif message.topic == "/aula_flask/umidade":
+            umidade = float(payload)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
