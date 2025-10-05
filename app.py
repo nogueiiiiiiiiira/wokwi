@@ -85,21 +85,21 @@ def handle_disconnect(client, userdata, rc):
 
 @mqtt_client.on_message()
 def handle_mqtt_message(client, userdata, message):
-    global temperatura, umidade, led_status, last_update
+    global temperatura, umidade, last_update
     try:
         payload = message.payload.decode()
         data = json.loads(payload)
+        
         if data.get("sensor") == "/aula_flask/temperatura":
-            temperatura = data["valor"]
+            temperatura = float(data["valor"])
         elif data.get("sensor") == "/aula_flask/umidade":
-            umidade = data["valor"]
+            umidade = float(data["valor"])
+            
         last_update = time.time()
-    except:
-        # fallback para mensagem simples
-        if message.topic == "/aula_flask/temperatura":
-            temperatura = float(payload)
-        elif message.topic == "/aula_flask/umidade":
-            umidade = float(payload)
+        print(f"[MQTT] Dados atualizados - Temp: {temperatura}, Umidade: {umidade}")
+        
+    except Exception as e:
+        print(f"[MQTT] Erro ao processar mensagem: {e}")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
