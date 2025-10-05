@@ -1,46 +1,19 @@
-/* ===== CSS Variables ===== */
-:root {
-    --primary-color: #007bff;
-    --primary-hover: #0056b3;
-    --success-color: #28a745;
-    --success-hover: #218838;
-    --danger-color: #dc3545;
-    --danger-hover: #b52a37;
-    --background-color: #f8f9fb;
-    --card-background: #fff;
-    --text-color: #333;
-    --text-muted: #555;
-    --text-light: #777;
-    --border-color: #ccc;
-    --shadow: rgba(0,0,0,0.08);
-    --shadow-hover: rgba(0,0,0,0.12);
-    --transition: 0.3s ease;
-    --border-radius: 8px;
-    --border-radius-large: 12px;
-    --spacing-small: 0.5rem;
-    --spacing-medium: 1rem;
-    --spacing-large: 1.5rem;
-    --spacing-xl: 2rem;
-}
-
-/* ===== Reset básico ===== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    font-family: "Segoe UI";
 }
 
 body {
-    background: var(--background-color);
-    color: var(--text-color);
+    background: #f8f9fb;
+    color: #333;
     line-height: 1.6;
     display: flex;
     justify-content: center;
-    padding: var(--spacing-xl);
+    padding: 2rem;
 }
 
-/* ===== Containers principais ===== */
 .container {
     max-width: 900px;
     width: 100%;
@@ -48,176 +21,165 @@ body {
 
 h1, h2, h3 {
     color: #222;
-    margin-bottom: var(--spacing-small);
+    margin-bottom: 0.5rem;
 }
 
 p {
-    color: var(--text-muted);
+    color: #555;
 }
 
-/* ===== Links e navegação ===== */
 a {
     text-decoration: none;
     color: inherit;
 }
 
 a:hover {
-    color: var(--primary-color);
+    color: #007bff;
 }
 
 a:focus {
-    outline: 2px solid var(--primary-color);
+    outline: 2px solid #007bff;
     outline-offset: 2px;
 }
 
-/* ===== Cards ===== */
 .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-medium);
-    margin: var(--spacing-xl) 0;
+    gap:  1rem;
+    margin: 2rem 0;
 }
 
 .card {
-    background: var(--card-background);
-    border-radius: var(--border-radius-large);
-    padding: var(--spacing-large);
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
     text-align: center;
-    box-shadow: 0 4px 8px var(--shadow);
-    transition: transform var(--transition), box-shadow var(--transition);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, rgba(0,0,0,0.08 0.3s ease);
     cursor: pointer;
 }
 
 .card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 6px 14px var(--shadow-hover);
+    box-shadow: 0 6px 14px  rgba(0,0,0,0.12);
 }
 
 .icon {
     font-size: 2rem;
-    margin-bottom: var(--spacing-small);
+    margin-bottom: 0.5rem;
 }
 
-/* ===== Botões ===== */
 button {
-    background: var(--primary-color);
+    background: #007bff;
     border: none;
     color: white;
     padding: 0.7rem 1.2rem;
-    border-radius: var(--border-radius);
+    border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
     margin: 0.3rem;
-    transition: background var(--transition);
+    transition: 0.3s ease;
 }
 
 button:hover {
-    background: var(--primary-hover);
+    background: #0056b3;
 }
 
 button:focus {
-    outline: 2px solid var(--primary-color);
+    outline: 2px solid #007bff;
     outline-offset: 2px;
 }
 
-/* Botões específicos do LED */
 #ligar_botao {
-    background: var(--success-color);
+    background:  #28a745;
 }
 #ligar_botao:hover {
-    background: var(--success-hover);
+    background: #218838;
 }
 #desligar_botao {
-    background: var(--danger-color);
+    background: #dc3545;
 }
 #desligar_botao:hover {
-    background: var(--danger-hover);
+    background:  #b52a37;
 }
 
-/* Grupo de botões LED */
 .botoes-led {
     display: flex;
-    gap: var(--spacing-medium);
+    gap:  1rem;
     justify-content: center;
     flex-wrap: wrap;
 }
 
-/* ===== Formulário de Login ===== */
 form {
-    background: var(--card-background);
-    padding: var(--spacing-xl);
-    border-radius: var(--border-radius-large);
+    background: #fff;
+    padding: 2rem;
     width: 300px;
-    box-shadow: 0 4px 10px var(--shadow);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     text-align: center;
     margin: auto;
 }
 
 form h1 {
-    margin-bottom: var(--spacing-medium);
+    margin-bottom:  1rem;
 }
 
 form input {
     width: 100%;
     padding: 0.7rem;
     margin: 0.6rem 0;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
+    border: 1px solid #ccc;
+    border-radius: 8px;
     outline: none;
-    transition: border var(--transition);
+    transition: .3s ease;
 }
 
 form input:focus {
-    border-color: var(--primary-color);
+    color: #007bff;
 }
 
-/* ===== Navegação ===== */
 .menu {
-    margin: var(--spacing-medium) 0 var(--spacing-xl) 0;
+    margin:  1rem 0 2rem 0;
     display: flex;
-    gap: var(--spacing-medium);
+    gap: 1rem;
     flex-wrap: wrap;
 }
 
 .menu a {
-    background: var(--card-background);
+    background: #fff;
     padding: 0.6rem 1rem;
-    border-radius: var(--border-radius);
-    box-shadow: 0 2px 6px var(--shadow);
-    transition: background var(--transition), color var(--transition);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    border-radius: 8px;
+     transition: background 0.3 ease, color 0.3 ease;
 }
 
 .menu a:hover {
-    background: var(--primary-color);
+    background-color: #007bff;
     color: #fff;
 }
 
-/* ===== Status do LED ===== */
 #status-led {
     font-size: 1.2rem;
-    margin: var(--spacing-medium) 0;
+    margin: 1rem 0;
     font-weight: bold;
 }
 
-/* ===== Sensor Cards ===== */
 .sensor-card {
-    background: var(--card-background);
-    padding: var(--spacing-medium);
-    border-radius: var(--border-radius-large);
-    box-shadow: 0 3px 8px var(--shadow);
-    margin-bottom: var(--spacing-medium);
+    background: #fff;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    margin-bottom: 1em;
 }
 
 #valor_temperatura,
 #valor_umidade {
     font-size: 2rem;
     font-weight: bold;
-    margin-top: var(--spacing-small);
-    color: var(--primary-color);
+    margin-top: 0.5rem;
+    color: #007bff;
     animation: fadeIn 0.5s ease-in;
 }
 
-/* ===== Animações ===== */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -226,43 +188,5 @@ form input:focus {
     to {
         opacity: 1;
         transform: translateY(0);
-    }
-}
-
-/* ===== Footer ===== */
-.footer {
-    margin-top: var(--spacing-xl);
-    font-size: 0.9rem;
-    color: var(--text-light);
-    text-align: center;
-}
-
-/* ===== Responsividade ===== */
-@media (max-width: 768px) {
-    body {
-        padding: var(--spacing-medium);
-    }
-
-    .container {
-        max-width: 100%;
-    }
-
-    .cards {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-medium);
-    }
-
-    .menu {
-        justify-content: center;
-    }
-
-    form {
-        width: 100%;
-        max-width: 300px;
-    }
-
-    .botoes-led {
-        flex-direction: column;
-        align-items: center;
     }
 }

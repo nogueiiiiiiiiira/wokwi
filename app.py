@@ -57,7 +57,6 @@ def publish_message():
     publish_result = mqtt_client.publish(topic, message)
     
     return jsonify({
-        'result': publish_result,
         'led_status': led_status
     })
 
