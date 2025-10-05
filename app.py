@@ -1,12 +1,11 @@
-from flask import Flask, json, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_mqtt import Mqtt
 import time
-from login import login
+import json
 
 app = Flask(__name__)
-app.register_blueprint(login, url_prefix = '/')
 
-# configurações do MQTT
+# configurações MQTT
 app.config['MQTT_BROKER_URL'] = 'mqtt-dashboard.com'
 app.config['MQTT_BROKER_PORT'] = 1883
 app.config['MQTT_USERNAME'] = ''
@@ -16,19 +15,40 @@ app.config['MQTT_TLS_ENABLED'] = False
 
 mqtt_client = Mqtt(app)
 
+usuarios = {
+    'usuario1@gmail.com': '1234',
+    'usuario2@gmail.com': '1234',
+}
+
 # variáveis globais
 temperatura = 25.0
 umidade = 60.0
 led_status = 0
 last_update = time.time()
-
 topic_subscribe = "/aula_flask/#"
 
-# rotas flask
+# rotas de autenticação
 @app.route('/')
-def login():
-    return render_template("login.html")
+def index():
+    return redirect(url_for('login_page'))
 
+@app.route('/login')
+def login_page():
+    return render_template('login.html', erro=False)
+
+@app.route('/validar_usuario', methods=['POST'])
+def validar_usuario():
+    usuario = request.form['usuario']
+    password = request.form['password']
+    print(f"Tentativa de login: {usuario}, {password}")
+    
+    if usuario in usuarios and usuarios[usuario] == password:
+        return redirect(url_for('home'))
+    else:
+        return render_template('login.html', erro=True)
+
+
+# rotas principais
 @app.route('/home')
 def home():
     return render_template('home.html')
@@ -71,7 +91,7 @@ def get_sensor_data():
         'last_update': last_update
     })
 
-# handlers MQTT
+# mqtt
 @mqtt_client.on_connect()
 def handle_connect(client, userdata, flags, rc):
     if rc == 0:
@@ -98,10 +118,10 @@ def handle_mqtt_message(client, userdata, message):
             umidade = float(data["valor"])
             
         last_update = time.time()
-        print(f"[MQTT] Dados atualizados - Temp: {temperatura}, Umidade: {umidade}")
+        print(f'[MQTT] Dados atualizados - Temp: {temperatura}, Umidade: {umidade}')
         
     except Exception as e:
-        print(f"[MQTT] Erro ao processar mensagem: {e}")
+        print(f'[MQTT] Erro ao processar mensagem: {e}')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
